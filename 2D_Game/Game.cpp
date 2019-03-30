@@ -10,8 +10,18 @@ Game::Game(Point tl, Point br) : topLeft(tl), bottomRight(br)
 {
 	normalGravity = Velocity(0, -5);
 	curTime = clock();
-	level = Level(topLeft, bottomRight);
-	camera = Camera(&player);
+	
+	//level = Level(topLeft, bottomRight);  // sets level to viewport size
+	level = Level();
+
+	// Camera needs to know the viewport info and level info
+	camera = Camera(
+		&player,                    // object to follow
+		topLeft,                    // viewport top left
+		bottomRight,                // viewport bottom right
+		level.getTopLeft(),         // level top left
+		level.getBottomRight()      // level bottom right
+	);
 
 }
 
@@ -51,11 +61,13 @@ void Game::handleInput(const Interface & ui)
 	if (ui.isLeft())
 	{
 		player.moveLeft();
+		keepObjectInLevel(player);
 	}
 
 	if (ui.isRight())
 	{
 		player.moveRight();
+		keepObjectInLevel(player);
 	}
 
 	if (ui.isUp() && onGround(player))
@@ -82,6 +94,31 @@ void Game::handleInput(const Interface & ui)
 	{
 
 	}
+}
+
+/*********************************************
+ * Function: keepObjectInLevel
+ * Description: makes sure the object doesn't
+ * leave the level
+ *********************************************/
+void Game::keepObjectInLevel(MovingObject &o)
+{
+	Point oPos = o.getPoint();
+	float x = oPos.getX();
+	float y = oPos.getY();
+	
+	// check right side
+	float rightSide = level.getBottomRight().getX();
+	if (x > rightSide - o.getRadius() - 2)
+		x = rightSide - o.getRadius() - 2;
+
+	// check left side
+	float leftSide = level.getTopLeft().getX();
+	if (x < leftSide + o.getRadius() + 2)
+		x = leftSide + o.getRadius() + 2;
+
+	Point p(x, y);
+	o.setPoint(p);
 }
 
 /*********************************************
@@ -119,7 +156,7 @@ void Game::applyGravity(MovingObject &o)
 	{
 		float x = o.getPoint().getX();
 		float fh = getFloorHeight(x);
-		Point p(x, fh);
+		Point p(x, fh + o.getRadius() + 2);
 		o.setPoint(p);
 		v = v * -1;
 		v.dampen(1.0);
@@ -128,14 +165,14 @@ void Game::applyGravity(MovingObject &o)
 }
 
 /*********************************************
-* Function: canDrop
+* Function: onGround
 * Description: returns true if object is 
 * already on ground
 *********************************************/
-bool Game::onGround(MovingObject o)
+bool Game::onGround(MovingObject &o)
 {
 	float y = o.getPoint().getY();
-	float fh = getFloorHeight(o.getPoint().getX());
+	float fh = getFloorHeight(o.getPoint().getX()) + o.getRadius() + 2;
 	return y <= fh;
 }
 
@@ -146,7 +183,7 @@ bool Game::onGround(MovingObject o)
 float Game::getFloorHeight(float x)
 {
 	// simple floor height for now
-	return bottomRight.getY() + 27;
+	return bottomRight.getY();
 }
 
 float Game::getDelta(){ 

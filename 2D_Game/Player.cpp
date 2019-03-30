@@ -4,12 +4,14 @@
 
 Player::Player() : speed(4)
 {
+	setRadius(25);
 }
 
 Player::Player(Point p)
 {
 	Player();
 	setPoint(p);
+	setRadius(25);
 }
 
 

@@ -4,7 +4,7 @@
  *  that specifies what methods of the game class are
  *  called each time through the game loop.
  ******************************************************/
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #include <iostream>
 #include "uiInteract.h"
 #include "Game.h"

@@ -13,9 +13,12 @@ private:
 	Point p;
 	Velocity v;
 	bool alive;
+	float radius;
 
 public: 
 	//getters & setters
+	float    getRadius() { return radius; }
+	void     setRadius(float r) { this->radius = r; }
 	Point    getPoint() { return p; }
 	Velocity getVelocity() { return v; }
 	void     setPoint(Point p) { this->p = p; }

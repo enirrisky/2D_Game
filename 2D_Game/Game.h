@@ -50,7 +50,15 @@ public:
 	 * Description: makes sure gravity doesn't pull
 	 * Objects through the floor
 	 *********************************************/
-	bool onGround(MovingObject o);
+	bool onGround(MovingObject &o);
+
+	/*********************************************
+	 * Function: onGround
+	 * Description: makes sure gravity doesn't pull
+	 * Objects through the floor
+	 *********************************************/
+	void keepObjectInLevel(MovingObject &o);
+
 
 	/*********************************************
 	* Function: getFloorHeight
@@ -59,7 +67,7 @@ public:
 	float getFloorHeight(float x);
 
 private: 
-	// The coordinates of the screen
+	// The coordinates of the viewport
 	Point topLeft;
 	Point bottomRight;
 

@@ -28,7 +28,7 @@ public:
 		
 	virtual void draw()
 	{
-		drawCircle(getPoint(), 25); // from uiDraw
+		drawCircle(getPoint(), getRadius()); // from uiDraw
 	}
 };
 
